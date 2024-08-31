@@ -170,8 +170,13 @@ const Brawler = ({ name, image, rarity, mastery, onMasteryChange }) => {
   const loadingBarWidth = (mastery / 24800) * 100;
 
   const getLoadingBarColor = (percentage) => {
-    if (percentage < 25) return 'bg-red-500';
+    if (percentage < 10) return 'bg-red-600';
+    if (percentage < 20) return 'bg-red-500';
+    if (percentage < 30) return 'bg-orange-500';
+    if (percentage < 40) return 'bg-orange-400';
     if (percentage < 50) return 'bg-yellow-500';
+    if (percentage < 60) return 'bg-yellow-400';
+    if (percentage < 70) return 'bg-green-400';
     return 'bg-green-500';
   };
 
@@ -210,12 +215,12 @@ const Brawler = ({ name, image, rarity, mastery, onMasteryChange }) => {
         <div className="mt-2 flex items-center">
           <span className="text-white font-lilita text-2xl">Total Mastery -</span>
           <input
-            type="number"
-            className="bg-gray-400 text-white font-lilita text-2xl px-4 py-2 ml-2 flex-1"
-            placeholder="Enter Number"
-            value={mastery}
-            onChange={onMasteryChange}
-          />
+  type="number"
+  className="bg-gray-400 text-white font-lilita text-2xl px-4 py-2 ml-2 flex-1"
+  placeholder="Enter Number"
+  value={mastery === 0 ? '' : mastery}
+  onChange={(e) => onMasteryChange(e.target.value === '' ? 0 : parseInt(e.target.value, 10))}
+/>
           <span className={`font-lilita ${size} ml-2 ${color}`}>{symbol}</span>
         </div>
         <div className="w-full max-w-sm bg-gray-300 h-4 rounded mt-2">
@@ -240,13 +245,13 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortedBrawlers, setSortedBrawlers] = useState(brawlersData);
 
-  const handleMasteryChange = (name) => (e) => {
-    const value = parseInt(e.target.value, 10);
+  const handleMasteryChange = (name) => (value) => {
     setMasteries((prevMasteries) => ({
       ...prevMasteries,
       [name]: Math.max(0, Math.min(24800, isNaN(value) ? 0 : value)),
     }));
   };
+  
 
   const sortBrawlers = () => {
     setSortedBrawlers([...brawlersData].sort((a, b) => a.name.localeCompare(b.name)));
